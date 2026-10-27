@@ -2,7 +2,7 @@
 
 浏览器端 TikTok LIVE 概念原型：微笑下雨、大笑烟花，烟花粒子与实时头部代理碰撞反弹。独立笔试作品，非 TikTok 官方产品；留言、礼物与观众数据为本地模拟。
 
-**Live Demo:** https://smile-weather-ar-2027-oct21.wendy317.chatgpt.site/?v=24
+**Live Demo:** https://xuanwenmao46-coder.github.io/smile-weather-ar/
 
 **Source Code (Public):** https://github.com/xuanwenmao46-coder/smile-weather-ar
 

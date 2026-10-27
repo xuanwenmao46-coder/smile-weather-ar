@@ -2,7 +2,7 @@
 
 ## 1. Live Demo
 
-https://smile-weather-ar-2027-oct21.wendy317.chatgpt.site/?v=24
+https://xuanwenmao46-coder.github.io/smile-weather-ar/
 
 开启摄像头并校准 → 微笑下雨 → 微笑同时张嘴笑开触发烟花 → 移动头部观察反弹。花园可关闭以单独验收核心效果。需要HTTPS和摄像头权限。
 
