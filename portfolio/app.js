@@ -76,3 +76,15 @@ if('IntersectionObserver' in window){
 document.addEventListener('visibilitychange',()=>{if(document.hidden)$('gift-film').pause();});
 addEventListener('beforeprint',()=>document.querySelectorAll('details').forEach(details=>{details.dataset.wasOpen=String(details.open);details.open=true;}));
 addEventListener('afterprint',()=>document.querySelectorAll('details').forEach(details=>{details.open=details.dataset.wasOpen==='true';}));
+
+// Preview is deliberately separate from the camera-driven live demo.
+const showcase=document.querySelector('.effect-showcase');
+const moods={rain:'微笑触发下雨，手掌可以悬停并牵引雨幕。',bloom:'大笑触发烟花，粒子与头部碰撞。'};
+document.querySelectorAll('[data-mood-select]').forEach(button=>button.addEventListener('click',()=>{
+ const mood=button.dataset.moodSelect;if(!showcase||!moods[mood])return;
+ showcase.dataset.mood=mood;
+ document.querySelectorAll('[data-mood-select]').forEach(b=>b.setAttribute('aria-pressed',String(b===button)));
+ document.querySelector('.rain-still').setAttribute('aria-hidden',String(mood!=='rain'));
+ document.querySelector('.bloom-still').setAttribute('aria-hidden',String(mood!=='bloom'));
+ $('mood-caption').textContent=moods[mood];
+}));
