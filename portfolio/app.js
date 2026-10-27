@@ -53,10 +53,10 @@ document.querySelectorAll('[data-filter]').forEach(button=>button.addEventListen
 $('gallery-sort').addEventListener('change',arrangeGallery);
 const agents={
   brief:{title:'区域文化需求整理',copy:'从已审核资料里组织任务上下文；证据不足的小语种地区不让模型自行编造文化。',input:'目标区域、礼物主题、已审核文化资料、平台政策',output:'RegionalBrief.json：推荐元素、配色、受限符号、来源与版本',gate:'文化资料缺失或有歧义，转交本地人工确认'},
-  concept:{title:'先选对概念，再制作资产',copy:'每个任务先提出三个方向，说明主体、材质、动画与情绪。高成本制作之前先发现创意问题。',input:'RegionalBrief、共享设计规范、礼物档位与交互目标',output:'ConceptSpec.json：主体造型、动画路径、配色材质与音效情绪',gate:'概念偏离文化资料或视觉中心不清，返回修改；高价值礼物加入设计师判断'},
-  culture:{title:'独立审查，不让生成者自评',copy:'文化合规基于适用地区的具体规则，不把宗教符号一概过滤。生成后的渲染结果还会再审一次。',input:'ConceptSpec、区域政策、平台政策与资料版本',output:'ComplianceReport：PASS、WARN或REJECT，附规则与修改方向',gate:'明确违规则驳回；文化歧义转人工；修改概念后必须重新审核'},
-  asset:{title:'只执行审核通过的生产指令',copy:'生成Agent是工具调用规划者。严格JSON与服务端字段校验共同控制执行，不让自由文本直接驱动生产工具。',input:'已审核ConceptSpec、技术规格、历史错误与剩余预算',output:'AssetBundle：模型、材质、贴图、动画与渲染预览',gate:'缺少技术规格则BLOCKED；出现受限符号时清空tool_calls，退回概念修订'},
-  qa:{title:'能通过检查，也能被清楚地看见',copy:'几何、UV、资源和目标设备性能由技术检查把关；小屏识别、节奏与遮挡仍要作为体验问题检查。',input:'AssetBundle、TechnicalSpec与已审核概念',output:'QAReport、问题定位与可复现预览；最终结果再次文化审核',gate:'失败返回明确问题、严重度与修复建议。局部网格问题优先修复，避免重做整个资产'}
+  concept:{title:'概念方案与筛选',copy:'每个任务先提出三个方向，说明主体、材质、动画与情绪。高成本制作之前先发现创意问题。',input:'RegionalBrief、共享设计规范、礼物档位与交互目标',output:'ConceptSpec.json：主体造型、动画路径、配色材质与音效情绪',gate:'概念偏离文化资料或视觉中心不清，返回修改；高价值礼物加入设计师判断'},
+  culture:{title:'独立文化审核',copy:'文化合规基于适用地区的具体规则，不把宗教符号一概过滤。生成后的渲染结果还会再审一次。',input:'ConceptSpec、区域政策、平台政策与资料版本',output:'ComplianceReport：PASS、WARN或REJECT，附规则与修改方向',gate:'明确违规则驳回；文化歧义转人工；修改概念后必须重新审核'},
+  asset:{title:'资产生成与工具调用',copy:'生成Agent是工具调用规划者。严格JSON与服务端字段校验共同控制执行，不让自由文本直接驱动生产工具。',input:'已审核ConceptSpec、技术规格、历史错误与剩余预算',output:'AssetBundle：模型、材质、贴图、动画与渲染预览',gate:'缺少技术规格则BLOCKED；出现受限符号时清空tool_calls，退回概念修订'},
+  qa:{title:'技术检查与小屏预览',copy:'几何、UV、资源和目标设备性能由技术检查把关；小屏识别、节奏与遮挡仍要作为体验问题检查。',input:'AssetBundle、TechnicalSpec与已审核概念',output:'QAReport、问题定位与可复现预览；最终结果再次文化审核',gate:'失败返回明确问题、严重度与修复建议。局部网格问题优先修复，避免重做整个资产'}
 };
 document.querySelectorAll('[data-agent]').forEach(button=>button.addEventListener('click',()=>{
   const data=agents[button.dataset.agent];if(!data)return;
