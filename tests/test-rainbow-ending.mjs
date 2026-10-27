@@ -1,0 +1,12 @@
+import assert from 'node:assert/strict';
+import {RainbowEnding} from '../dist/rainbow-ending.js';
+const r=new RainbowEnding();
+r.update(.05,{mode:'still',rainCount:0});assert.equal(r.alpha,0);
+r.update(.05,{mode:'rain',rainCount:12});
+for(let i=0;i<100;i++)r.update(.05,{mode:'bloom',rainCount:0});assert.equal(r.alpha,0);
+for(let i=0;i<40;i++)r.update(.05,{mode:'still',rainCount:1});assert.equal(r.alpha,0);
+for(let i=0;i<30;i++)r.update(.05,{mode:'still',rainCount:0});assert.ok(r.alpha>.99);
+const age=r.age;r.update(.05,{mode:'still',rainCount:0,suspended:true});assert.equal(r.age,age);
+r.update(.05,{mode:'rain',rainCount:3});assert.equal(r.alpha,0);
+r.update(.05,{mode:'still',rainCount:0,head:false});assert.equal(r.alpha,0);
+console.log('PASS: rainbow waits for last raindrop, excludes fireworks, fades in, pauses, resets');

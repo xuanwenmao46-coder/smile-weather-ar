@@ -1,0 +1,31 @@
+import assert from 'node:assert/strict';
+import {Fingertip,pointingIndex} from '../dist/fingertip.js';
+const points=Array.from({length:21},()=>({x:.5,y:.8}));
+points[5]={x:.35,y:.6};points[9]={x:.45,y:.58};points[13]={x:.55,y:.6};points[17]={x:.65,y:.64};
+for(const [tip,pip,mcp] of [[8,6,5],[12,10,9],[16,14,13],[20,18,17]]){points[pip]={x:points[mcp].x,y:points[mcp].y-.18};points[tip]={x:points[mcp].x,y:points[mcp].y-.36};}
+assert.equal(pointingIndex(points,640,480),false,'open palm must not ignite');
+for(const i of [12,16,20])points[i].y=.72;
+assert.equal(pointingIndex(points,640,480),true);assert.equal(pointingIndex(points.slice(1)),false);
+const fx=new Fingertip(),tip={active:true,x:100,y:200};
+assert.equal(fx.update(0,tip,'rain',600,1066),null);assert.equal(fx.update(350,tip,'rain',600,1066),null);
+assert.equal(fx.update(370,tip,'rain',600,1066).kind,'ripple');
+assert.equal(fx.update(2000,tip,'rain',600,1066),null,'holding still cannot repeatedly fire');
+fx.update(2300,null,'rain',600,1066);fx.update(2400,tip,'rain',600,1066);
+assert.equal(fx.update(2770,tip,'rain',600,1066).kind,'ripple');
+fx.update(4000,{...tip,x:250},'bloom',600,1066);
+assert.equal(fx.update(4370,{...tip,x:250},'bloom',600,1066).kind,'spark');
+assert.equal(fx.rings.length,6);fx.update(5000,null,'still',600,1066);
+assert.equal(fx.update(6000,tip,'still',600,1066),null,'neutral expression cannot fire fireworks');
+fx.reset();fx.update(0,tip,'rain',600,1066);fx.update(300,{...tip,x:200},'rain',600,1066);
+assert.equal(fx.update(400,{...tip,x:200},'rain',600,1066),null,'moving tip restarts dwell');
+// Actual HandInput message path: worker landmarks -> mirrored/cropped tip -> expiry.
+globalThis.Worker=class{postMessage(){} terminate(){}};
+globalThis.createImageBitmap=async()=>({close(){}});
+const {HandInput}=await import('../dist/hand-input.js');
+const input=new HandInput({video:{videoWidth:640,videoHeight:480},geometry:()=>({w:600,h:450}),onStatus(){}});
+input.start();input.captureGeometry={w:600,h:450,videoWidth:640,videoHeight:480};
+const now=performance.now();input.worker.onmessage({data:{type:'result',points,now}});
+const result=input.tick(now,true);assert.ok(result.finger?.active);assert.equal(result.active,false);
+assert.ok(Math.abs(result.finger.x-390)<.001,'tip mapping must mirror exactly once');
+assert.equal(input.tick(now+301,true).finger,null,'stale fingertip must disappear');input.stop();
+console.log(JSON.stringify({passed:true,checks:['index vs palm','360ms dwell','no repeated stationary ignition','release rearm','mode-specific ripple/firework','movement resets dwell','bounded rings','worker landmark mapping','stale input release']}));

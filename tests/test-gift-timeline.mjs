@@ -1,0 +1,14 @@
+import assert from 'node:assert/strict';
+import {giftFrame,GIFT_DURATION,GIFT_LAUNCHES} from '../dist/gift-timeline.js';
+assert.equal(GIFT_DURATION,16);
+assert.equal(giftFrame(0).phase,'arrival');assert.equal(giftFrame(2).phase,'build');
+assert.equal(giftFrame(6).phase,'bloom');assert.equal(giftFrame(12).phase,'thanks');
+assert.equal(giftFrame(16).done,true);assert.equal(giftFrame(16).opacity,0);
+assert.equal(giftFrame(.5).finger,true);assert.equal(giftFrame(8.5).finger,true);assert.equal(giftFrame(1).hand,true);
+assert.equal(giftFrame(3).hand,false);assert.equal(giftFrame(5.67).mode,'rain');assert.equal(giftFrame(5.68).mode,'bloom');
+assert.equal(giftFrame(11.2).mode,'still');
+for(let i=0;i<3;i++)assert.ok(Math.abs(GIFT_LAUNCHES[i]+.43-(6.1+i*2))<.02,'main burst must meet music impact within 20ms');
+for(let i=1;i<GIFT_LAUNCHES.length;i++)assert.ok(GIFT_LAUNCHES[i]-GIFT_LAUNCHES[i-1]>=1.8,'respects physical launch cooldown');
+const opacity=Array.from({length:91},(_,i)=>giftFrame(13+i/30).opacity);
+assert.ok(opacity.every((v,i)=>v>=0&&v<=1&&(!i||v<=opacity[i-1])));
+console.log(JSON.stringify({passed:true,duration:16,impacts:[6.1,8.1,10.1],checks:['four narrative phases','water hook first','anticipation before impact','audio/bloom cue alignment','launch cooldown','graceful fade and end']}));

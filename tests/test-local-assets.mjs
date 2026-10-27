@@ -1,0 +1,10 @@
+import assert from 'node:assert/strict';
+import {readFileSync,statSync} from 'node:fs';
+const base='dist/vendor/mediapipe/';
+for(const f of ['vision_bundle.mjs','face_landmarker.task','hand_landmarker.task','wasm/vision_wasm_internal.js','wasm/vision_wasm_internal.wasm','wasm/vision_wasm_nosimd_internal.js','wasm/vision_wasm_nosimd_internal.wasm'])assert.ok(statSync(base+f).size>1000,f);
+for(const f of ['vision_wasm_internal.wasm','vision_wasm_nosimd_internal.wasm'])assert.equal(readFileSync(base+'wasm/'+f).subarray(0,4).toString('hex'),'0061736d');
+const app=readFileSync('dist/app.js','utf8');
+assert.ok(app.includes("import('./vendor/mediapipe/vision_bundle.mjs')"));
+assert.ok(!app.includes('0.10.22'));
+assert.ok(statSync('dist/assets/reverie-gift-edit.mp3').size>10000);
+console.log('PASS local model/runtime bundle exists, WASM signature valid, no guessed CDN dependency');

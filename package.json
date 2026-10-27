@@ -1,0 +1,1 @@
+{"name":"smile-weather-ar","version":"24.0.0","private":true,"type":"module","scripts":{"test":"node scripts/test.mjs","start":"node scripts/serve.mjs"},"engines":{"node":">=22"}}
